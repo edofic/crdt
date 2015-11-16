@@ -10,6 +10,7 @@ import Data.ByteString (ByteString)
 import Data.Crdt
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
+import Database.PostgreSQL.Simple.Notification
 
 data UpdateEntry = UpdateEntry { id :: !Integer
                                , action :: !Value
@@ -77,7 +78,8 @@ updateCrdtVar (CrdtVar {state, conn}) = do
   modifyMVar_ state $ \_ -> return (s', i')
 
 forkUpdater :: (CanUpdate s, FromJSON (Update s)) => CrdtVar s -> IO ThreadId
-forkUpdater c = forkIO $ forever $ do
-  updateCrdtVar c
-  threadDelay $ 1000 * 1000
-  -- todo wait for NOTIFY
+forkUpdater c@(CrdtVar {conn}) = forkIO $ do
+  execute_ conn "LISTEN updates;"
+  forever $ do
+    updateCrdtVar c
+    getNotification conn
