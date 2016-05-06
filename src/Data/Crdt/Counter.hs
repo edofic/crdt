@@ -1,3 +1,4 @@
+{-# LANGUAGE TypeFamilies, FlexibleContexts, DeriveGeneric #-}
 module Data.Crdt.Counter where
 
 import Data.Aeson

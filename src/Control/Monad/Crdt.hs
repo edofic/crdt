@@ -1,3 +1,4 @@
+{-# LANGUAGE MultiParamTypeClasses, FlexibleInstances #-}
 module Control.Monad.Crdt where
 
 import Control.Monad.Identity
