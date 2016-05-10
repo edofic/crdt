@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 module Data.Crdt.Transport.Postgresql where
 
 import Control.Concurrent
